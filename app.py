@@ -7,7 +7,9 @@ app = Flask(__name__)
 app.secret_key = "meal-plan-secret-key"
 
 MEMORY_FILE = "memory.json"
-client = anthropic.Anthropic()
+api_key = os.environ.get("ANTHROPIC_API_KEY")
+print(f"API KEY FOUND: {bool(api_key)}")
+client = anthropic.Anthropic(api_key=api_key)
 
 def save_preferences(prefs):
     with open(MEMORY_FILE, "w") as f:
