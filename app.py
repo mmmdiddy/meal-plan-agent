@@ -8,7 +8,6 @@ app.secret_key = "meal-plan-secret-key"
 
 MEMORY_FILE = "memory.json"
 api_key = os.environ.get("ANTHROPIC_API_KEY")
-print(f"API KEY FOUND: {bool(api_key)}")
 client = anthropic.Anthropic(api_key=api_key)
 
 def save_preferences(prefs):
