@@ -3,6 +3,15 @@ import anthropic
 import json
 import os
 
+def parse_json(text):
+    # Strip markdown code blocks if present
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("```")[1]
+        if text.startswith("json"):
+            text = text[4:]
+    return json.loads(text.strip())
+
 app = Flask(__name__)
 app.secret_key = "meal-plan-secret-key"
 
@@ -44,7 +53,7 @@ def planner_agent(diet, allergies, cuisine, calories):
         max_tokens=1000,
         messages=[{"role": "user", "content": prompt}]
     )
-    return json.loads(response.content[0].text)
+    return parse_json(response.content[0].text)
 
 def recipe_agent(meal_name):
     prompt = f"""
@@ -61,7 +70,7 @@ def recipe_agent(meal_name):
         max_tokens=1000,
         messages=[{"role": "user", "content": prompt}]
     )
-    return json.loads(response.content[0].text)
+    return parse_json(response.content[0].text)
 
 def shopper_agent(all_recipes):
     all_ingredients = []
@@ -90,7 +99,7 @@ def shopper_agent(all_recipes):
         max_tokens=2000,
         messages=[{"role": "user", "content": prompt}]
     )
-    return json.loads(response.content[0].text)
+    return parse_json(response.content[0].text)
 
 @app.route("/")
 def index():
